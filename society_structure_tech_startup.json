@@ -1,0 +1,303 @@
+{
+  "society_type": "Neon Burnout: Silicon Valley Micro-City",
+  "description": "A hyper-competitive urban enclave of 5,000 residents dedicated entirely to the rapid scaling of technology startups. The culture glorifies sleep deprivation and 'hustle,' resulting in widespread chronic anxiety, sleep disorders, and a fragmented social fabric where professional utility supersedes human connection.",
+  "roles": {
+    "Founder/CEO": {
+      "percentage": 5,
+      "work_hours": [
+        6,
+        2
+      ],
+      "stress_baseline": 0.95,
+      "description": "Visionaries obsessed with funding rounds and market domination, often neglecting personal health to secure venture capital."
+    },
+    "Senior Engineer": {
+      "percentage": 20,
+      "work_hours": [
+        7,
+        3
+      ],
+      "stress_baseline": 0.85,
+      "description": "Technical leads responsible for architecture and code delivery, constantly facing 'crunch time' deadlines and technical debt."
+    },
+    "Junior Developer/Analyst": {
+      "percentage": 25,
+      "work_hours": [
+        8,
+        4
+      ],
+      "stress_baseline": 0.8,
+      "description": "Entry-level staff performing high-volume coding or data tasks, fearing layoffs if they do not demonstrate 'extreme ownership'."
+    },
+    "Product Manager": {
+      "percentage": 15,
+      "work_hours": [
+        7,
+        23
+      ],
+      "stress_baseline": 0.9,
+      "description": "The bridge between engineering and business, managing impossible feature roadmaps and mediating conflicts between stakeholders."
+    },
+    "Sales & Growth Hacker": {
+      "percentage": 15,
+      "work_hours": [
+        9,
+        22
+      ],
+      "stress_baseline": 0.75,
+      "description": "Aggressive outreach specialists measured strictly on conversion metrics, facing constant rejection and quota pressure."
+    },
+    "Support Staff & Freelancers": {
+      "percentage": 10,
+      "work_hours": [
+        9,
+        18
+      ],
+      "stress_baseline": 0.6,
+      "description": "Administrative assistants, cleaners, and gig-economy workers who are often invisible to the startup culture but essential for operations."
+    },
+    "Mental Health/Wellness Providers": {
+      "percentage": 5,
+      "work_hours": [
+        9,
+        17
+      ],
+      "stress_baseline": 0.7,
+      "description": "Therapists and counselors overwhelmed by high caseloads of burnout, often working on a subscription basis for startups."
+    },
+    "Venture Capitalists (Resident)": {
+      "percentage": 5,
+      "work_hours": [
+        10,
+        20
+      ],
+      "stress_baseline": 0.65,
+      "description": "High-net-worth individuals who evaluate startup viability, exerting immense pressure on founders to pivot or fail."
+    }
+  },
+  "daily_rhythms": {
+    "05:00": "Early risers (mostly Founders and Senior Engineers) begin checking emails and Slack channels while commuting via e-bikes.",
+    "07:00": "Peak arrival at co-working spaces; 'Stand-up' meetings occur while standing, often lasting longer than intended due to unresolved blockers.",
+    "09:00": "Deep work blocks begin, but are frequently interrupted by urgent pings from investors or product pivots.",
+    "12:00": "Lunch is often skipped or eaten at desks while continuing to code; 'Nutrition' is replaced by energy drinks and meal delivery apps.",
+    "14:00": "Post-lunch slump is fought with caffeine; intense sprint planning and stakeholder meetings commence.",
+    "17:00": "Official end of workday for some, but 80% of the population stays late for 'unplanned' collaboration or catching up on debt.",
+    "20:00": "Dinner is a social event for networking rather than rest; 'After-hours' brainstorming sessions begin in glass-walled conference rooms.",
+    "23:00": "Quiet hours in residential zones are violated by the hum of server farms and the glow of laptop screens in apartments.",
+    "02:00": "The city is effectively asleep, except for a small cluster of insomnia-induced workers and 24-hour laundromats serving the exhausted."
+  },
+  "recurring_events": [
+    {
+      "name": "All-Hands 'Pivot' Meeting",
+      "frequency": "weekly",
+      "day": "Monday",
+      "time": 9,
+      "description": "Founders announce strategic shifts, often invalidating previous week's work, causing immediate panic and re-prioritization.",
+      "affects": [
+        "Founder/CEO",
+        "Senior Engineer",
+        "Product Manager",
+        "Junior Developer/Analyst"
+      ],
+      "mental_health_impact": {
+        "anxiety": 0.9,
+        "stress": 0.85
+      }
+    },
+    {
+      "name": "Demo Day Simulation",
+      "frequency": "monthly",
+      "day": "15",
+      "time": 18,
+      "description": "High-stakes presentation to mock investors; failure results in public shaming and threats of funding withdrawal.",
+      "affects": [
+        "Founder/CEO",
+        "Product Manager",
+        "Senior Engineer"
+      ],
+      "mental_health_impact": {
+        "anxiety": 0.95,
+        "stress": 0.9
+      }
+    },
+    {
+      "name": "Mandatory 'Culture Fit' Happy Hour",
+      "frequency": "weekly",
+      "day": "Thursday",
+      "time": 20,
+      "description": "Social event where not attending is seen as a lack of commitment; alcohol is used to lower inhibitions for networking.",
+      "affects": [
+        "all"
+      ],
+      "mental_health_impact": {
+        "anxiety": 0.6,
+        "stress": 0.5
+      }
+    },
+    {
+      "name": "Quarterly Review & Layoff Planning",
+      "frequency": "monthly",
+      "day": "30",
+      "time": 10,
+      "description": "Quiet meetings where underperformers are identified for termination, creating an atmosphere of paranoia.",
+      "affects": [
+        "Senior Engineer",
+        "Junior Developer/Analyst",
+        "Sales & Growth Hacker"
+      ],
+      "mental_health_impact": {
+        "anxiety": 0.98,
+        "stress": 0.92
+      }
+    }
+  ],
+  "random_events": [
+    {
+      "name": "Series A Funding Rejection",
+      "probability": 0.15,
+      "description": "A major startup fails to secure funding, leading to immediate salary cuts and mass layoffs.",
+      "triggers": [
+        "market_downturn",
+        "poor_metrics"
+      ],
+      "affects": "all",
+      "mental_health_impact": {
+        "anxiety": 0.95,
+        "depression": 0.8,
+        "stress": 0.9
+      },
+      "cascading_effects": [
+        "Increased competition for remaining jobs",
+        "Rise in suicide ideation",
+        "Collapse of local service economy"
+      ]
+    },
+    {
+      "name": "Critical Server Outage",
+      "probability": 0.25,
+      "description": "A catastrophic bug takes down the main product, requiring a 48-hour 'crunch' to fix before a client demo.",
+      "triggers": [
+        "technical_debt",
+        "rushed_release"
+      ],
+      "affects": [
+        "Senior Engineer",
+        "Junior Developer/Analyst",
+        "Product Manager"
+      ],
+      "mental_health_impact": {
+        "anxiety": 0.85,
+        "depression": 0.4,
+        "stress": 0.95
+      },
+      "cascading_effects": [
+        "Sleep deprivation spikes",
+        "Physical health incidents (migraines, heart palpitations)",
+        "Interpersonal conflict escalation"
+      ]
+    },
+    {
+      "name": "Whistleblower Scandal",
+      "probability": 0.1,
+      "description": "An employee leaks internal documents regarding toxic workplace practices or data privacy violations.",
+      "triggers": [
+        "high_stress",
+        "lack_of_ethics"
+      ],
+      "affects": "all",
+      "mental_health_impact": {
+        "anxiety": 0.7,
+        "depression": 0.6,
+        "stress": 0.8
+      },
+      "cascading_effects": [
+        "Regulatory investigations",
+        "Mass exodus of talent",
+        "Total loss of public trust"
+      ]
+    },
+    {
+      "name": "Burnout Epidemic",
+      "probability": 0.3,
+      "description": "A wave of mental health crises occurs simultaneously, causing a temporary halt in productivity across the district.",
+      "triggers": [
+        "consecutive_sprints",
+        "lack_of_leave"
+      ],
+      "affects": "all",
+      "mental_health_impact": {
+        "anxiety": 0.6,
+        "depression": 0.9,
+        "stress": 0.7
+      },
+      "cascading_effects": [
+        "Emergency room overcrowding",
+        "Temporary shutdown of co-working spaces",
+        "Forced (but reluctant) time off"
+      ]
+    }
+  ],
+  "locations": {
+    "Open-Plan Co-Working Hub": {
+      "count": 12,
+      "capacity": 300,
+      "description": "Glass-walled, noise-filled spaces with standing desks, neon lighting, and free kombucha; designed to maximize visibility and minimize privacy."
+    },
+    "Micro-Apartments": {
+      "count": 2500,
+      "capacity": 1,
+      "description": "Tiny, expensive studio units where residents sleep for 4-5 hours; often shared with roommates to save costs."
+    },
+    "24-Hour Energy Cafes": {
+      "count": 40,
+      "capacity": 50,
+      "description": "Coffee shops that serve as secondary workspaces, selling high-caffeine drinks and protein shakes; no seating for relaxation."
+    },
+    "Crisis Counseling Centers": {
+      "count": 5,
+      "capacity": 20,
+      "description": "Underfunded clinics offering sliding-scale therapy, often with 3-month waitlists despite high demand."
+    },
+    "Gym & Recovery Pods": {
+      "count": 8,
+      "capacity": 100,
+      "description": "High-tech fitness centers focused on 'bio-hacking' and recovery to extend work hours, not for leisure."
+    },
+    "Venture Capital Offices": {
+      "count": 6,
+      "capacity": 50,
+      "description": "Fortress-like buildings where decisions are made that determine the fate of the city's startups."
+    }
+  },
+  "social_structures": {
+    "hierarchies": [
+      "Venture Capitalists (The Gatekeepers)",
+      "Founders/CEOs (The Visionaries)",
+      "Senior Engineers/PMs (The Executors)",
+      "Junior Staff (The Disposable)",
+      "Support Staff (The Invisible)"
+    ],
+    "groups": [
+      "The Grindset (Ultra-competitors)",
+      "The Burned Out (Cynical survivors)",
+      "The Quiet Quitters (Disengaged)",
+      "The Activists (Advocating for change)"
+    ],
+    "interaction_patterns": "Interactions are predominantly transactional and utilitarian. Small talk is viewed as a waste of time. Relationships are formed based on 'network value' rather than shared interests. Trust is low, and information hoarding is common to prevent being replaced."
+  },
+  "stressors": [
+    "Fear of obsolescence and layoff",
+    "Chronic sleep deprivation",
+    "Blurred boundaries between work and life",
+    "Constant performance monitoring (KPIs)",
+    "Toxic 'hustle' peer pressure",
+    "Lack of job security"
+  ],
+  "support_systems": [
+    "EAP (Employee Assistance Programs) that are often underutilized due to stigma",
+    "Peer support groups for founders (often enabling each other's bad habits)",
+    "Meditation apps (subscription-based, often ignored)",
+    "24/7 Telehealth hotlines",
+    "Occasional 'Wellness Days' that are cancelled due to 'urgent deadlines'"
+  ]
+}

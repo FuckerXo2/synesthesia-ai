@@ -1,0 +1,665 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, monospace;
+    background: #0a0e14;
+    color: #e6edf3;
+    overflow: hidden;
+    letter-spacing: -0.01em;
+}
+
+.screen {
+    display: none;
+    width: 100vw;
+    height: 100vh;
+}
+
+.screen.active {
+    display: flex;
+}
+
+/* Setup Screen - Clinical Entry */
+#setup-screen {
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #0a0e14 0%, #151b23 100%);
+    position: relative;
+}
+
+#setup-screen::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        repeating-linear-gradient(0deg, rgba(255,255,255,0.03) 0px, transparent 1px, transparent 2px, rgba(255,255,255,0.03) 3px),
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.03) 0px, transparent 1px, transparent 2px, rgba(255,255,255,0.03) 3px);
+    pointer-events: none;
+}
+
+#setup-screen .container {
+    max-width: 700px;
+    padding: 50px;
+    background: rgba(15, 20, 28, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 
+        0 0 0 1px rgba(255, 255, 255, 0.05),
+        0 20px 60px rgba(0, 0, 0, 0.8),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    position: relative;
+    z-index: 1;
+}
+
+h1 {
+    font-size: 72px;
+    text-align: center;
+    font-weight: 200;
+    letter-spacing: -0.05em;
+    color: #ffffff;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    font-family: 'Courier New', monospace;
+}
+
+.subtitle {
+    text-align: center;
+    font-size: 14px;
+    color: #8b949e;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-weight: 500;
+}
+
+.tagline {
+    text-align: center;
+    font-size: 13px;
+    color: #58a6ff;
+    margin-bottom: 50px;
+    font-style: italic;
+    letter-spacing: 0.05em;
+}
+
+.form-group {
+    margin-bottom: 30px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 11px;
+    color: #8b949e;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 16px 20px;
+    background: rgba(22, 27, 34, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #e6edf3;
+    font-size: 15px;
+    transition: all 0.2s;
+    font-family: 'Inter', sans-serif;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #58a6ff;
+    background: rgba(22, 27, 34, 1);
+    box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.1);
+}
+
+.presets {
+    margin: 40px 0;
+    padding: 20px;
+    background: rgba(22, 27, 34, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.presets p {
+    font-size: 11px;
+    color: #8b949e;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.preset-btn {
+    padding: 12px 20px;
+    margin: 5px;
+    background: rgba(88, 166, 255, 0.1);
+    border: 1px solid rgba(88, 166, 255, 0.3);
+    color: #58a6ff;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 500;
+}
+
+.preset-btn:hover {
+    background: rgba(88, 166, 255, 0.2);
+    border-color: #58a6ff;
+    transform: translateY(-1px);
+}
+
+.primary-btn {
+    width: 100%;
+    padding: 20px;
+    background: #58a6ff;
+    border: none;
+    color: #0a0e14;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 30px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.primary-btn:hover {
+    background: #79c0ff;
+    box-shadow: 0 0 20px rgba(88, 166, 255, 0.4);
+}
+
+.instructions {
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.instructions p {
+    font-size: 12px;
+    color: #6e7681;
+    margin: 10px 0;
+    font-family: 'Courier New', monospace;
+}
+
+/* Loading Screen - Clinical */
+#loading-screen {
+    justify-content: center;
+    align-items: center;
+    background: #0a0e14;
+    flex-direction: column;
+}
+
+.loader {
+    width: 80px;
+    height: 80px;
+    border: 2px solid rgba(88, 166, 255, 0.1);
+    border-top-color: #58a6ff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 40px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+#loading-message {
+    text-align: center;
+    font-size: 16px;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-weight: 300;
+}
+
+#loading-detail {
+    text-align: center;
+    color: #6e7681;
+    font-size: 12px;
+    font-family: 'Courier New', monospace;
+}
+
+/* Simulation Screen - Black Mirror Clinical */
+#simulation-screen {
+    flex-direction: column;
+    background: #0a0e14;
+}
+
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    background: rgba(15, 20, 28, 0.95);
+    border-bottom: 1px solid rgba(88, 166, 255, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+.logo {
+    font-size: 20px;
+    font-weight: 200;
+    color: #58a6ff;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-family: 'Courier New', monospace;
+}
+
+.sim-time {
+    font-size: 16px;
+    color: #e6edf3;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 0.05em;
+}
+
+.controls button {
+    padding: 10px 20px;
+    margin-left: 10px;
+    background: rgba(88, 166, 255, 0.1);
+    border: 1px solid rgba(88, 166, 255, 0.3);
+    color: #58a6ff;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 500;
+}
+
+.controls button:hover {
+    background: rgba(88, 166, 255, 0.2);
+    border-color: #58a6ff;
+}
+
+/* Event Injection Bar - Clinical Alert */
+.event-bar {
+    background: rgba(15, 20, 28, 0.98);
+    padding: 15px 30px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.event-input-container {
+    flex: 1;
+    display: flex;
+    gap: 10px;
+}
+
+#event-input {
+    flex: 1;
+    padding: 12px 20px;
+    background: rgba(22, 27, 34, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #e6edf3;
+    font-size: 13px;
+    transition: all 0.2s;
+    font-family: 'Courier New', monospace;
+}
+
+#event-input:focus {
+    outline: none;
+    border-color: #f85149;
+    background: rgba(22, 27, 34, 1);
+    box-shadow: 0 0 0 3px rgba(248, 81, 73, 0.1);
+}
+
+.inject-btn {
+    padding: 12px 30px;
+    background: #f85149;
+    border: none;
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 700;
+    transition: all 0.2s;
+    white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.inject-btn:hover {
+    background: #ff6b6b;
+    box-shadow: 0 0 20px rgba(248, 81, 73, 0.4);
+}
+
+.event-feedback {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    font-size: 11px;
+    font-family: 'Courier New', monospace;
+}
+
+.event-success {
+    color: #3fb950;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.event-stats {
+    color: #8b949e;
+}
+
+.main-content {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+.canvas-container {
+    flex: 1;
+    background: #0a0e14;
+    position: relative;
+    overflow: hidden;
+    border-right: 1px solid rgba(88, 166, 255, 0.1);
+}
+
+#simulation-canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    cursor: crosshair;
+}
+
+#simulation-canvas:active {
+    cursor: grabbing;
+}
+
+.side-panel {
+    width: 350px;
+    background: rgba(15, 20, 28, 0.95);
+    padding: 25px;
+    overflow-y: auto;
+    border-left: 1px solid rgba(88, 166, 255, 0.2);
+}
+
+.side-panel h3 {
+    margin-bottom: 20px;
+    color: #e6edf3;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-weight: 600;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 10px;
+}
+
+.stats {
+    margin-bottom: 35px;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 15px;
+    margin: 8px 0;
+    background: rgba(22, 27, 34, 0.6);
+    border-left: 3px solid;
+    transition: all 0.2s;
+}
+
+.stat-item:hover {
+    background: rgba(22, 27, 34, 0.9);
+}
+
+.stat-item.thriving { border-left-color: #3fb950; }
+.stat-item.coping { border-left-color: #58a6ff; }
+.stat-item.struggling { border-left-color: #d29922; }
+.stat-item.crisis { border-left-color: #f85149; }
+
+.stat-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 12px;
+    box-shadow: 0 0 10px currentColor;
+}
+
+.stat-dot.thriving { background: #3fb950; }
+.stat-dot.coping { background: #58a6ff; }
+.stat-dot.struggling { background: #d29922; }
+.stat-dot.crisis { background: #f85149; }
+
+.agent-details {
+    background: rgba(22, 27, 34, 0.8);
+    padding: 20px;
+    border: 1px solid rgba(88, 166, 255, 0.2);
+    margin-bottom: 25px;
+}
+
+.agent-details h3 {
+    margin-bottom: 15px;
+    border-bottom: 1px solid rgba(88, 166, 255, 0.2);
+}
+
+#agent-info p {
+    margin: 10px 0;
+    font-size: 12px;
+    color: #c9d1d9;
+    font-family: 'Courier New', monospace;
+}
+
+.controls-help {
+    margin-top: 35px;
+    padding-top: 25px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.controls-help h4 {
+    margin-bottom: 12px;
+    color: #8b949e;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.controls-help p {
+    font-size: 11px;
+    color: #6e7681;
+    margin: 8px 0;
+    font-family: 'Courier New', monospace;
+}
+
+/* Oracle AI Section - Clinical Intelligence */
+.oracle-section {
+    background: rgba(22, 27, 34, 0.8);
+    padding: 20px;
+    border: 1px solid rgba(88, 166, 255, 0.2);
+    margin-bottom: 25px;
+}
+
+.oracle-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.oracle-section h3 {
+    margin-bottom: 0;
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.amd-badge {
+    background: linear-gradient(135deg, #f85149 0%, #ff6b6b 100%);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 2px;
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    box-shadow: 0 0 10px rgba(248, 81, 73, 0.3);
+}
+
+.oracle-subtitle {
+    font-size: 10px;
+    color: #6e7681;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.quick-queries {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.query-btn {
+    padding: 10px 12px;
+    background: rgba(88, 166, 255, 0.1);
+    border: 1px solid rgba(88, 166, 255, 0.3);
+    color: #58a6ff;
+    cursor: pointer;
+    font-size: 10px;
+    transition: all 0.2s;
+    text-align: left;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 500;
+}
+
+.query-btn:hover {
+    background: rgba(88, 166, 255, 0.2);
+    border-color: #58a6ff;
+    transform: translateY(-1px);
+}
+
+.custom-query {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.custom-query input {
+    flex: 1;
+    padding: 10px 15px;
+    background: rgba(15, 20, 28, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #e6edf3;
+    font-size: 11px;
+    font-family: 'Courier New', monospace;
+}
+
+.custom-query input:focus {
+    outline: none;
+    border-color: #58a6ff;
+    box-shadow: 0 0 0 2px rgba(88, 166, 255, 0.1);
+}
+
+.custom-query button {
+    padding: 10px 20px;
+    background: #58a6ff;
+    border: none;
+    color: #0a0e14;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 700;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.custom-query button:hover {
+    background: #79c0ff;
+    box-shadow: 0 0 15px rgba(88, 166, 255, 0.4);
+}
+
+.oracle-response {
+    background: rgba(15, 20, 28, 0.9);
+    padding: 15px;
+    border: 1px solid rgba(88, 166, 255, 0.1);
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.oracle-loading {
+    text-align: center;
+    padding: 30px;
+}
+
+.spinner {
+    width: 30px;
+    height: 30px;
+    border: 2px solid rgba(88, 166, 255, 0.2);
+    border-top-color: #58a6ff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 15px;
+}
+
+.oracle-loading p {
+    font-size: 11px;
+    color: #6e7681;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.oracle-answer-section {
+    margin-bottom: 20px;
+}
+
+.oracle-answer-section h4 {
+    font-size: 11px;
+    color: #58a6ff;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+}
+
+.oracle-answer-section p {
+    font-size: 12px;
+    color: #c9d1d9;
+    line-height: 1.6;
+    font-family: 'Courier New', monospace;
+}
+
+.oracle-answer-section ul {
+    list-style: none;
+    padding: 0;
+}
+
+.oracle-answer-section li {
+    font-size: 11px;
+    color: #c9d1d9;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-family: 'Courier New', monospace;
+}
+
+.oracle-answer-section li:last-child {
+    border-bottom: none;
+}
+
+.error {
+    color: #f85149;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(22, 27, 34, 0.5);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(88, 166, 255, 0.3);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(88, 166, 255, 0.5);
+}

@@ -1,0 +1,300 @@
+{
+  "society_type": "Ares-IV Orbital Outpost",
+  "description": "A high-density, closed-loop life-support society orbiting Mars, operating under extreme resource scarcity and psychological strain due to a critical oxygen generation failure. The population is governed by a strict meritocratic-military hybrid structure where survival depends on adherence to rationing protocols and collective mental resilience.",
+  "roles": {
+    "Commander & Executive Council": {
+      "percentage": 1,
+      "work_hours": [
+        0,
+        24
+      ],
+      "stress_baseline": 0.95,
+      "description": "Ultimate decision-makers responsible for life-support allocation, crisis management, and maintaining order. They bear the heaviest psychological burden of potential mass casualties."
+    },
+    "Life Support & Engineering": {
+      "percentage": 15,
+      "work_hours": [
+        4,
+        20
+      ],
+      "stress_baseline": 0.85,
+      "description": "Technicians and engineers working in shifts to repair the oxygen scrubbers, manage CO2 levels, and maintain water reclamation. They are the most critical asset and face immediate physical danger from toxic exposure."
+    },
+    "Medical & Psychological Corps": {
+      "percentage": 8,
+      "work_hours": [
+        6,
+        22
+      ],
+      "stress_baseline": 0.75,
+      "description": "Doctors treating hypoxia symptoms and psychologists managing panic attacks, claustrophobia, and group hysteria. They act as the primary support system for the crew."
+    },
+    "Agriculture & Resource Rationing": {
+      "percentage": 12,
+      "work_hours": [
+        5,
+        19
+      ],
+      "stress_baseline": 0.65,
+      "description": "Manages the hydroponic bays for food and monitors daily caloric/oxygen rations per individual. They enforce consumption limits, often becoming targets of public anger."
+    },
+    "Security & Order Enforcement": {
+      "percentage": 10,
+      "work_hours": [
+        0,
+        24
+      ],
+      "stress_baseline": 0.7,
+      "description": "Guards who patrol the station to prevent hoarding, sabotage, and rioting. They are the first line of defense against civil unrest caused by resource scarcity."
+    },
+    "General Operations & Maintenance": {
+      "percentage": 35,
+      "work_hours": [
+        7,
+        19
+      ],
+      "stress_baseline": 0.55,
+      "description": "The general workforce handling cleaning, waste processing, and non-critical repairs. Their morale is vital for station functionality but they feel most powerless regarding the crisis."
+    },
+    "Research & Data Analysis": {
+      "percentage": 12,
+      "work_hours": [
+        8,
+        20
+      ],
+      "stress_baseline": 0.6,
+      "description": "Scientists analyzing the oxygen failure data and searching for external solutions or terraforming data. They often retreat into work to avoid emotional processing."
+    },
+    "Non-Essential / Rationed Population": {
+      "percentage": 7,
+      "work_hours": [
+        12,
+        16
+      ],
+      "stress_baseline": 0.8,
+      "description": "Elderly, children, or those with chronic conditions unable to perform critical labor. They rely entirely on the charity of the workforce, leading to high feelings of guilt and helplessness."
+    }
+  },
+  "daily_rhythms": {
+    "00:00-04:00": "Quiet Hours: Minimal lighting, low-noise protocols enforced to conserve energy and allow sleep. Security patrols are heightened due to increased vulnerability of the sleeping population.",
+    "04:00-05:00": "System Check: Engineering teams begin pre-shift diagnostics on the failing O2 scrubbers. Air quality is monitored continuously.",
+    "05:00-06:00": "Wake-up & Ration Distribution: Alarms sound. First wave of food and water distribution occurs. Oxygen masks are checked by Life Support.",
+    "06:00-12:00": "Primary Work Block: Critical roles (Engineering, Agriculture) work at maximum efficiency. General population performs maintenance. Tension is highest as oxygen levels fluctuate.",
+    "12:00-13:00": "Communal Meal & Briefing: A mandatory 1-hour break where the Commander addresses the crew on oxygen status. This is a high-stress period for public announcements.",
+    "13:00-19:00": "Secondary Work Block: Shifts rotate. Research teams analyze data. Security monitors for hoarding or conflicts in common areas.",
+    "19:00-20:00": "Evening Ration & Hygiene: Strict water usage limits enforced. Final distribution of food for the day.",
+    "20:00-22:00": "Social & Decompression: Limited communal time allowed in the 'Green Zone' (hydroponics). Psychological counseling available.",
+    "22:00-00:00": "Lockdown & Lights Out: Non-essential areas sealed. Only essential personnel remain active. Station enters low-power mode."
+  },
+  "recurring_events": [
+    {
+      "name": "O2 Status Town Hall",
+      "frequency": "daily",
+      "day": "all",
+      "time": 12,
+      "description": "Commander delivers the raw numbers on oxygen reserves and scrubber efficiency. Transparency is mandatory to prevent rumors, but the data often induces panic.",
+      "affects": [
+        "Commander & Executive Council",
+        "General Operations & Maintenance",
+        "Non-Essential / Rationed Population"
+      ],
+      "mental_health_impact": {
+        "anxiety": 0.8,
+        "stress": 0.9
+      }
+    },
+    {
+      "name": "Mandatory Mental Health Triage",
+      "frequency": "weekly",
+      "day": "wednesday",
+      "time": 14,
+      "description": "Psychologists conduct rapid-fire screening for signs of psychosis, severe depression, or panic disorders. Those flagged are placed on 'rest protocols' or sedation.",
+      "affects": [
+        "Medical & Psychological Corps",
+        "All Roles"
+      ],
+      "mental_health_impact": {
+        "anxiety": 0.4,
+        "stress": 0.5
+      }
+    },
+    {
+      "name": "Resource Allocation Council",
+      "frequency": "weekly",
+      "day": "friday",
+      "time": 0,
+      "description": "Closed-door meeting to decide rations for the upcoming week, potentially cutting food or oxygen for specific non-essential sectors if reserves drop below 15%.",
+      "affects": [
+        "Commander & Executive Council",
+        "Agriculture & Resource Rationing"
+      ],
+      "mental_health_impact": {
+        "anxiety": 0.6,
+        "stress": 0.8
+      }
+    },
+    {
+      "name": "Virtual Earth Day",
+      "frequency": "monthly",
+      "day": "day_of_month",
+      "time": 20,
+      "description": "A 30-minute gathering where the crew views archived footage of Earth (forests, oceans) to maintain morale. Often ends in collective weeping or silence.",
+      "affects": [
+        "All Roles"
+      ],
+      "mental_health_impact": {
+        "anxiety": -0.2,
+        "stress": -0.1
+      }
+    }
+  ],
+  "random_events": [
+    {
+      "name": "Scrubber Critical Failure",
+      "probability": 0.15,
+      "description": "A primary oxygen generator shuts down unexpectedly, dropping station-wide O2 levels by 10% in minutes. Emergency protocols trigger immediate lockdown.",
+      "triggers": [
+        "High system strain",
+        "Component fatigue"
+      ],
+      "affects": "all",
+      "mental_health_impact": {
+        "anxiety": 1.0,
+        "depression": 0.3,
+        "stress": 1.0
+      },
+      "cascading_effects": [
+        "Mass panic",
+        "Security lockdown of non-critical sectors",
+        "Emergency rationing"
+      ]
+    },
+    {
+      "name": "Riot in Sector 4",
+      "probability": 0.08,
+      "description": "A group of workers attempts to breach the restricted food storage, believing rations are being hoarded by the elite. Security must intervene.",
+      "triggers": [
+        "High stress baseline > 0.8",
+        "Rumor mill"
+      ],
+      "affects": "Security & Order Enforcement",
+      "mental_health_impact": {
+        "anxiety": 0.7,
+        "depression": 0.4,
+        "stress": 0.9
+      },
+      "cascading_effects": [
+        "Loss of trust in leadership",
+        "Increased security presence",
+        "Food ration reduction for involved sector"
+      ]
+    },
+    {
+      "name": "Isolation Hysteria Outbreak",
+      "probability": 0.12,
+      "description": "A cluster of crew members begins exhibiting severe paranoia and hallucinations due to CO2 buildup and lack of sunlight, accusing neighbors of stealing air.",
+      "triggers": [
+        "Poor air quality",
+        "Sleep deprivation"
+      ],
+      "affects": "General Operations & Maintenance",
+      "mental_health_impact": {
+        "anxiety": 0.9,
+        "depression": 0.6,
+        "stress": 0.8
+      },
+      "cascading_effects": [
+        "Social isolation",
+        "Medical intervention",
+        "Quarantine of affected individuals"
+      ]
+    },
+    {
+      "name": "Successful Repair Milestone",
+      "probability": 0.2,
+      "description": "Engineering team manages to stabilize an O2 scrubber or extend its lifespan, providing a temporary sense of hope.",
+      "triggers": [
+        "Engineering success roll"
+      ],
+      "affects": "Life Support & Engineering",
+      "mental_health_impact": {
+        "anxiety": -0.5,
+        "stress": -0.4
+      },
+      "cascading_effects": [
+        "Temporary boost in morale",
+        "Increased work efficiency",
+        "Relief in rations"
+      ]
+    }
+  ],
+  "locations": {
+    "Command Bridge": {
+      "count": 1,
+      "capacity": 10,
+      "description": "The nerve center for decision making, monitored by cameras and sensors. High tension environment."
+    },
+    "Life Support Core": {
+      "count": 3,
+      "capacity": 20,
+      "description": "Noisy, hot, and filled with hazardous machinery. The most dangerous and critical area of the station."
+    },
+    "Hydroponics Bay (The Green Zone)": {
+      "count": 2,
+      "capacity": 50,
+      "description": "The only place with natural light (LEDs) and plants. Used for food production and rare social gatherings."
+    },
+    "Sleeping Quarters (Bunks)": {
+      "count": 15,
+      "capacity": 70,
+      "description": "Crammed, soundproofed pods. Privacy is non-existent; noise travels easily, causing sleep disturbances."
+    },
+    "Medical Bay & Psych Ward": {
+      "count": 1,
+      "capacity": 15,
+      "description": "Sterile, quiet environment for treating physical injuries and mental health crises. Contains restraints for violent patients."
+    },
+    "Mess Hall / Common Room": {
+      "count": 2,
+      "capacity": 100,
+      "description": "Small, cramped area for eating and brief socializing. Often the site of arguments over food portions."
+    },
+    "Airlock & Cargo Bay": {
+      "count": 2,
+      "capacity": 30,
+      "description": "Restricted area for external repairs and receiving supplies. Access is strictly controlled by Security."
+    }
+  },
+  "social_structures": {
+    "hierarchies": [
+      "Commander (Absolute Authority)",
+      "Executive Council (Resource Managers)",
+      "Critical Technical Staff (Life Support/Engineering)",
+      "Security Forces",
+      "General Workforce",
+      "Non-Essential/Rationed Population"
+    ],
+    "groups": [
+      "The Engineers (Cohesive, high-stress, protective of equipment)",
+      "The Guards (Isolated, suspicious of civilians)",
+      "The Rationed (Desperate, prone to forming secret alliances)",
+      "The Psych Ward Patients (Stigmatized, feared by others)"
+    ],
+    "interaction_patterns": "Interactions are transactional and guarded. Trust is low. Conversations often revolve around resource availability, health status, or rumors of sabotage. Physical contact is minimized to conserve heat and prevent disease spread."
+  },
+  "stressors": [
+    "Fluctuating oxygen levels causing physical hypoxia",
+    "Lack of privacy in sleeping quarters",
+    "Fear of suffocation or airlock failure",
+    "Uncertainty about rescue or Earth contact",
+    "Perceived unfairness in food/oxygen rationing",
+    "Sensory deprivation (lack of natural light, sound, nature)"
+  ],
+  "support_systems": [
+    "Mandatory group therapy sessions",
+    "Virtual reality 'Earth' escape pods (limited access)",
+    "Anonymous reporting system for hoarding/sabotage",
+    "Peer support 'buddy' systems assigned to every bunk",
+    "Strict noise cancellation protocols during sleep hours"
+  ]
+}

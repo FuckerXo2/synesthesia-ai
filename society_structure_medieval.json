@@ -1,0 +1,316 @@
+{
+  "society_type": "Frostbound Hamlet",
+  "description": "A tightly knit agrarian community of 500 souls clinging to survival amidst a severe, unrelenting winter. Social cohesion is the primary defense against starvation and disease, enforced by a rigid hierarchy and shared rationing protocols.",
+  "roles": {
+    "Lord/Lady": {
+      "percentage": 0.2,
+      "work_hours": [
+        6,
+        20
+      ],
+      "stress_baseline": 0.85,
+      "description": "The ruling family managing overall resource allocation, mediating disputes, and making life-or-death decisions on who receives extra rations."
+    },
+    "Steward/Overseer": {
+      "percentage": 1.5,
+      "work_hours": [
+        5,
+        21
+      ],
+      "stress_baseline": 0.9,
+      "description": "Administrators responsible for inventory, enforcing rationing laws, and reporting directly to the Lord. They bear the brunt of public anger."
+    },
+    "Healer/Wise Woman": {
+      "percentage": 0.8,
+      "work_hours": [
+        0,
+        24
+      ],
+      "stress_baseline": 0.95,
+      "description": "Overworked herbalists and midwives treating frostbite, plague, and malnutrition with limited supplies. Often the target of superstition or blame."
+    },
+    "Blacksmith/Fletcher": {
+      "percentage": 1.2,
+      "work_hours": [
+        6,
+        18
+      ],
+      "stress_baseline": 0.7,
+      "description": "Critical artisans maintaining tools, repairing roofs, and crafting weapons against wolves. Their work keeps the settlement functional."
+    },
+    "Hunter/Trapper": {
+      "percentage": 4.0,
+      "work_hours": [
+        4,
+        19
+      ],
+      "stress_baseline": 0.8,
+      "description": "Risky role venturing into deep snow for meat and fur. High mortality rate due to cold and predators; success is the only buffer against starvation."
+    },
+    "Farmer/Forager": {
+      "percentage": 45.0,
+      "work_hours": [
+        6,
+        16
+      ],
+      "stress_baseline": 0.75,
+      "description": "The backbone of the village, tasked with maintaining the communal fire, guarding grain stores, and gathering scarce wood and dried roots."
+    },
+    "Elder/Storyteller": {
+      "percentage": 5.0,
+      "work_hours": [
+        0,
+        24
+      ],
+      "stress_baseline": 0.4,
+      "description": "Respected figures who preserve history, teach survival skills, and provide psychological comfort through oral tradition during long nights."
+    },
+    "Child/Adolescent": {
+      "percentage": 35.0,
+      "work_hours": [
+        7,
+        15
+      ],
+      "stress_baseline": 0.5,
+      "description": "Assigned light labor like fetching water, mending nets, or caring for younger siblings. Their health is the first to suffer from malnutrition."
+    },
+    "Sick/Infirmed": {
+      "percentage": 9.3,
+      "work_hours": [
+        0,
+        0
+      ],
+      "stress_baseline": 0.98,
+      "description": "Those bedridden by the 'Winter Pox' or severe frostbite. They are dependent on communal care and face the highest risk of being abandoned."
+    }
+  },
+  "daily_rhythms": {
+    "04:00": "Dawn prayers and immediate check of the communal fire; the sick are warmed first.",
+    "05:00": "Stewards distribute the day's grain ration (strictly measured). Hunters depart before full light.",
+    "06:00": "Labor begins: farmers check grain silos for rot, blacksmiths tend the forge, women mend clothes.",
+    "12:00": "Midday meal: A thin broth shared in the Great Hall. Brief respite to conserve body heat.",
+    "14:00": "Afternoon labor continues; children are sent to gather firewood or tend to livestock.",
+    "16:00": "Work stops as light fades. Everyone retreats indoors to conserve heat.",
+    "17:00": "Evening meal: The heaviest meal of the day, often just more broth or a piece of dried meat.",
+    "18:00": "Community gathering in the Great Hall for storytelling, dispute resolution, or planning.",
+    "20:00": "Lights (candles/oil) are extinguished to save fuel. Families huddle together for warmth.",
+    "23:00": "Silence falls; only the watchmen and the dying remain awake."
+  },
+  "recurring_events": [
+    {
+      "name": "The Ration Count",
+      "frequency": "daily",
+      "day": "all",
+      "time": "05:30",
+      "description": "Stewards publicly weigh and distribute grain. Anyone caught hoarding is publicly shamed or punished.",
+      "affects": [
+        "Steward/Overseer",
+        "Farmer/Forager",
+        "Child/Adolescent"
+      ],
+      "mental_health_impact": {
+        "anxiety": 0.8,
+        "stress": 0.7
+      }
+    },
+    {
+      "name": "The Healing Vigil",
+      "frequency": "weekly",
+      "day": "sunday",
+      "time": "19:00",
+      "description": "The entire village gathers to pray for the sick and share herbal remedies. A time of collective grief and hope.",
+      "affects": [
+        "Healer/Wise Woman",
+        "Sick/Infirmed",
+        "Elder/Storyteller"
+      ],
+      "mental_health_impact": {
+        "anxiety": 0.4,
+        "stress": 0.3
+      }
+    },
+    {
+      "name": "The Council of Elders",
+      "frequency": "weekly",
+      "day": "wednesday",
+      "time": "18:00",
+      "description": "Leadership meets to decide on resource reallocation and potential sacrifices (e.g., who gets the last medicine).",
+      "affects": [
+        "Lord/Lady",
+        "Steward/Overseer",
+        "Healer/Wise Woman"
+      ],
+      "mental_health_impact": {
+        "anxiety": 0.9,
+        "stress": 0.95
+      }
+    },
+    {
+      "name": "The Bone-Burn",
+      "frequency": "monthly",
+      "day": "day_of_month",
+      "time": "21:00",
+      "description": "The dead are cremated or buried in frozen ground to prevent disease spread. A somber ritual where names are called.",
+      "affects": [
+        "all"
+      ],
+      "mental_health_impact": {
+        "depression": 0.8,
+        "anxiety": 0.5
+      }
+    }
+  ],
+  "random_events": [
+    {
+      "name": "The Plague Breach",
+      "probability": 0.15,
+      "description": "A new strain of fever spreads rapidly through the crowded housing, causing panic and a spike in mortality.",
+      "triggers": [
+        "low_sanitation",
+        "high_population_density"
+      ],
+      "affects": "all",
+      "mental_health_impact": {
+        "anxiety": 0.95,
+        "depression": 0.8,
+        "stress": 0.9
+      },
+      "cascading_effects": [
+        "workforce_reduction",
+        "ration_cut",
+        "social_stigma"
+      ]
+    },
+    {
+      "name": "The Wolf Pack Raid",
+      "probability": 0.2,
+      "description": "Starving wolves breach the outer palisade, killing livestock and injuring a hunter.",
+      "triggers": [
+        "food_scarcity",
+        "deep_snow"
+      ],
+      "affects": [
+        "Hunter/Trapper",
+        "Farmer/Forager"
+      ],
+      "mental_health_impact": {
+        "anxiety": 0.7,
+        "stress": 0.8
+      },
+      "cascading_effects": [
+        "meat_shortage",
+        "fortification_repair",
+        "night_watch_increase"
+      ]
+    },
+    {
+      "name": "The Hoard Discovery",
+      "probability": 0.05,
+      "description": "A hidden cache of rot-resistant food is found, sparking a temporary celebration or a violent conflict over ownership.",
+      "triggers": [
+        "exploration",
+        "desperation"
+      ],
+      "affects": [
+        "Steward/Overseer",
+        "Lord/Lady",
+        "Farmer/Forager"
+      ],
+      "mental_health_impact": {
+        "anxiety": 0.3,
+        "stress": 0.4
+      },
+      "cascading_effects": [
+        "temporary_morale_boost",
+        "potential_violence",
+        "ration_increase"
+      ]
+    },
+    {
+      "name": "The Snowslide",
+      "probability": 0.1,
+      "description": "Heavy snow collapses a section of the village, trapping families under the debris.",
+      "triggers": [
+        "heavy_snowfall",
+        "weak_structures"
+      ],
+      "affects": "all",
+      "mental_health_impact": {
+        "anxiety": 0.9,
+        "depression": 0.6,
+        "stress": 0.95
+      },
+      "cascading_effects": [
+        "casualties",
+        "shelter_loss",
+        "resource_diversion"
+      ]
+    }
+  ],
+  "locations": {
+    "Great Hall": {
+      "count": 1,
+      "capacity": 300,
+      "description": "The central heated building where meals are eaten, disputes settled, and the sick are sheltered. The heart of community bonding."
+    },
+    "Communal Granary": {
+      "count": 1,
+      "capacity": 500,
+      "description": "A heavily guarded, insulated storehouse for the village's food supply. Access is strictly controlled."
+    },
+    "Hut Clusters": {
+      "count": 80,
+      "capacity": 6,
+      "description": "Small, single-room dwellings packed tightly for warmth. Often overcrowded, leading to rapid disease spread."
+    },
+    "The Infirmary": {
+      "count": 1,
+      "capacity": 40,
+      "description": "A drafty but designated space for the sick. Often viewed with fear and avoided by the healthy."
+    },
+    "The Smithy": {
+      "count": 2,
+      "capacity": 10,
+      "description": "The only consistently warm places in the village due to the forge, used for essential repairs."
+    },
+    "Watchtowers": {
+      "count": 4,
+      "capacity": 2,
+      "description": "Elevated platforms for spotting predators and monitoring the perimeter."
+    }
+  },
+  "social_structures": {
+    "hierarchies": [
+      "Lord/Lady (Divine Right)",
+      "Stewards & Healers (Administrative/Medical Authority)",
+      "Skilled Artisans (Blacksmiths, Hunters)",
+      "General Laborers (Farmers, Foragers)",
+      "Children & Elders (Dependent/Vulnerable)",
+      "The Sick & Infirmed (Marginalized)"
+    ],
+    "groups": [
+      "The Survival Council (Leadership)",
+      "The Watch (Defense)",
+      "The Caregivers (Healers and Mothers)",
+      "The Hoarders (Secretive individuals hiding food)",
+      "The Kinship Clans (Extended families living in clusters)"
+    ],
+    "interaction_patterns": "Interactions are highly transactional regarding resources but deeply emotional regarding kinship. Trust is low for outsiders but high within families. Public shaming is a common social control mechanism. Silence is respected as a sign of mourning or respect."
+  },
+  "stressors": [
+    "Constant threat of starvation",
+    "Rapid spread of 'Winter Pox' and frostbite",
+    "Extreme cold and lack of fuel",
+    "Fear of resource hoarding by neighbors",
+    "Loss of family members to disease or cold",
+    "Psychological toll of endless darkness"
+  ],
+  "support_systems": [
+    "Communal storytelling and oral history",
+    "Shared meals in the Great Hall",
+    "Religious/ritualistic prayers for the dead and sick",
+    "Kinship bonds (extended families sharing resources)",
+    "The authority of Elders providing wisdom and calm",
+    "The forge (physical warmth and gathering point)"
+  ]
+}

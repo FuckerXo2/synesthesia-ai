@@ -1,0 +1,19 @@
+# Synesthesia Requirements
+
+# Core dependencies
+openai>=1.0.0
+python-dotenv>=1.0.0
+
+# Visualization
+pygame>=2.5.0
+
+# Database
+# (using built-in sqlite3)
+
+# Optional: For faster processing
+# numpy>=1.24.0
+# pandas>=2.0.0
+
+# Development
+# pytest>=7.0.0
+# black>=23.0.0

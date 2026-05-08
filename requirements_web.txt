@@ -1,0 +1,16 @@
+# Synesthesia Web App Requirements
+
+# Core dependencies
+openai>=1.0.0
+python-dotenv>=1.0.0
+
+# Web framework
+flask>=3.0.0
+flask-socketio>=5.3.0
+python-socketio>=5.10.0
+
+# WSGI server
+gunicorn>=21.2.0
+
+# Existing dependencies
+# (no pygame needed for web version)

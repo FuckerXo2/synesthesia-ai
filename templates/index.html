@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Synesthesia - Mental Health Population Simulator</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+</head>
+<body>
+    <!-- Setup Screen -->
+    <div id="setup-screen" class="screen active">
+        <div class="container">
+            <h1>SYNESTHESIA</h1>
+            <p class="subtitle">Mental Health Population Simulator</p>
+            <p class="tagline">"The Sims meets Black Mirror"</p>
+            
+            <div class="form-group">
+                <label>What society do you want to simulate?</label>
+                <input type="text" id="society-input" placeholder="e.g., Tech startup city, Medieval village, Space station..." />
+            </div>
+            
+            <div class="form-group">
+                <label>Population Size (10-200)</label>
+                <input type="number" id="population-input" value="100" min="10" max="200" />
+            </div>
+            
+            <div class="presets">
+                <p>Quick presets:</p>
+                <button class="preset-btn" onclick="setPreset('Tech startup with burnout culture')">🏢 Tech Startup</button>
+                <button class="preset-btn" onclick="setPreset('Small rural town with tight-knit community')">🏘️ Small Town</button>
+                <button class="preset-btn" onclick="setPreset('University campus during finals week')">🎓 University</button>
+            </div>
+            
+            <button id="generate-btn" class="primary-btn" onclick="generateSimulation()">
+                🚀 GENERATE & GO
+            </button>
+            
+            <div class="instructions">
+                <p>1. Describe the society you want to simulate</p>
+                <p>2. Set population size (recommended: 50-100 for smooth performance)</p>
+                <p>3. Click GO to generate and watch live!</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="screen">
+        <div class="container">
+            <div class="loader"></div>
+            <h2 id="loading-message">Generating society...</h2>
+            <p id="loading-detail">This may take 30-60 seconds...</p>
+        </div>
+    </div>
+    
+    <!-- Simulation Screen -->
+    <div id="simulation-screen" class="screen">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div class="logo">SYNESTHESIA</div>
+            <div class="sim-time" id="sim-time">--:--</div>
+            <div class="controls">
+                <button id="pause-btn" onclick="togglePause()">⏸️ Pause</button>
+                <button onclick="stopSimulation()">⏹️ Stop</button>
+            </div>
+        </div>
+        
+        <!-- Event Injection Bar -->
+        <div class="event-bar">
+            <div class="event-input-container">
+                <input type="text" id="event-input" placeholder="Inject event: 'Elections happening', 'New 4-day work week policy', 'Economic crisis'..." />
+                <button onclick="injectEvent()" class="inject-btn">⚡ Inject Event</button>
+            </div>
+            <div id="event-feedback" class="event-feedback"></div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Canvas -->
+            <div class="canvas-container">
+                <canvas id="simulation-canvas" width="1200" height="800"></canvas>
+            </div>
+            
+            <!-- Side Panel -->
+            <div class="side-panel">
+                <h3>Population Stats</h3>
+                <div class="stats">
+                    <div class="stat-item">
+                        <span class="stat-dot thriving"></span>
+                        <span>Thriving: <span id="stat-thriving">0</span></span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-dot coping"></span>
+                        <span>Coping: <span id="stat-coping">0</span></span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-dot struggling"></span>
+                        <span>Struggling: <span id="stat-struggling">0</span></span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-dot crisis"></span>
+                        <span>Crisis: <span id="stat-crisis">0</span></span>
+                    </div>
+                </div>
+                
+                <!-- Oracle AI Query Interface -->
+                <div class="oracle-section">
+                    <div class="oracle-header">
+                        <h3>🔮 Oracle AI</h3>
+                        <span class="amd-badge">Powered by AMD</span>
+                    </div>
+                    <p class="oracle-subtitle">Ask anything about the simulation</p>
+                    
+                    <div class="quick-queries">
+                        <button class="query-btn" onclick="askOracle('Who is most at risk right now?')">
+                            ⚠️ Most at Risk
+                        </button>
+                        <button class="query-btn" onclick="askOracle('What are the main mental health trends?')">
+                            📊 Trends
+                        </button>
+                        <button class="query-btn" onclick="askOracle('Which roles are most stressed?')">
+                            💼 Role Analysis
+                        </button>
+                        <button class="query-btn" onclick="askOracle('What interventions would help?')">
+                            💡 Interventions
+                        </button>
+                    </div>
+                    
+                    <div class="custom-query">
+                        <input type="text" id="oracle-input" placeholder="Ask your own question..." />
+                        <button onclick="askCustomQuery()">Ask</button>
+                    </div>
+                    
+                    <div id="oracle-response" class="oracle-response" style="display: none;">
+                        <div class="oracle-loading" id="oracle-loading" style="display: none;">
+                            <div class="spinner"></div>
+                            <p>Analyzing...</p>
+                        </div>
+                        <div id="oracle-answer"></div>
+                    </div>
+                </div>
+                
+                <div id="agent-details" class="agent-details" style="display: none;">
+                    <h3>Agent Details</h3>
+                    <div id="agent-info"></div>
+                </div>
+                
+                <div class="controls-help">
+                    <h4>Controls</h4>
+                    <p>🖱️ Click agent to see details</p>
+                    <p>🔍 Scroll to zoom</p>
+                    <p>🖐️ Drag to pan</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
