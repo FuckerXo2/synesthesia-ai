@@ -1,19 +1,17 @@
-# Synesthesia Requirements
+# Synesthesia - Production Requirements
 
-# Core dependencies
+# Core
+Flask==3.0.0
+flask-socketio==5.3.5
+python-socketio==5.10.0
+python-engineio==4.8.0
+eventlet==0.33.3
 openai>=1.0.0
 python-dotenv>=1.0.0
 
-# Visualization
-pygame>=2.5.0
+# WSGI Server
+gunicorn==21.2.0
 
-# Database
-# (using built-in sqlite3)
-
-# Optional: For faster processing
-# numpy>=1.24.0
-# pandas>=2.0.0
-
-# Development
-# pytest>=7.0.0
-# black>=23.0.0
+# Optional but recommended
+gevent==23.9.1
+gevent-websocket==0.10.1
