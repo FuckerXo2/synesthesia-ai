@@ -14,6 +14,18 @@ from openai import OpenAI
 import threading
 import time
 
+# Import new features
+from synesthesia.database.models import Database
+from synesthesia.agent.memory import AgentMemory
+from synesthesia.agent.social_network import SocialNetwork, SocialNetworkGenerator, ConnectionType
+from synesthesia.simulation.life_events import LifeEventGenerator
+from synesthesia.interview.interviewer import AgentInterviewer
+from synesthesia.analytics.advanced_analytics import (
+    RiskIdentifier,
+    PopulationAnalytics,
+    TrendAnalyzer
+)
+
 load_dotenv()
 
 app = Flask(__name__)
@@ -35,6 +47,27 @@ class SimulationRunner:
         self.sim_time = datetime.now()
         self.conversations = []  # Track active conversations
         self.conversation_cooldown = {}  # Track conversation cooldowns
+        
+        # NEW: Database integration
+        self.db = Database(f"simulation_{sim_id}.db")
+        
+        # NEW: Social network
+        self.social_network = None
+        
+        # NEW: Life events generator
+        self.life_event_generator = LifeEventGenerator(event_rate_multiplier=1.0)
+        
+        # NEW: Population stats history for trend analysis
+        self.stats_history = []
+        
+        # NEW: LLM client for interviews
+        self.llm_client = OpenAI(
+            api_key=os.getenv("LLM_API_KEY"),
+            base_url=os.getenv("LLM_BASE_URL")
+        )
+        
+        # NEW: Interviewer
+        self.interviewer = AgentInterviewer(self.llm_client)
         
     def generate_society(self):
         """Generate society structure"""
@@ -170,6 +203,8 @@ class SimulationRunner:
                  "Isabella", "William", "Mia", "James", "Charlotte", "Benjamin", "Amelia",
                  "Lucas", "Harper", "Henry", "Evelyn", "Alexander"]
         
+        agents_for_network = []  # For social network generation
+        
         for i in range(self.config['population']):
             role = random.choice(role_names)
             role_info = roles.get(role, {})
@@ -196,12 +231,68 @@ class SimulationRunner:
                 sleep_hours=list(range(23, 24)) + list(range(0, 7))
             )
             
+            # NEW: Add memory system to agent
+            agent.memory = AgentMemory()
+            agent.memory.add_memory(
+                memory_type='observation',
+                content=f"Started life in {self.config['society_description']}",
+                importance=0.8
+            )
+            
             self.agents[i] = agent
+            
+            # NEW: Store agent in database
+            self.db.insert_agent({
+                'agent_id': i,
+                'name': agent.name,
+                'age': agent.age,
+                'role': agent.role,
+                'sub_role': None,
+                'gender': random.choice(['male', 'female', 'non-binary']),
+                'family_status': random.choice(['single', 'married', 'divorced']),
+                'personality_traits': json.dumps(agent.personality_traits),
+                'work_hours': json.dumps(work_hours),
+                'sleep_hours': json.dumps(agent.sleep_hours)
+            })
+            
+            # NEW: Store initial mental health state
+            self.db.insert_mental_health_state({
+                'agent_id': i,
+                'timestamp': datetime.now().isoformat(),
+                'simulated_time': self.sim_time.strftime('%Y-%m-%d %H:%M'),
+                'anxiety': agent.mental_health.anxiety,
+                'depression': agent.mental_health.depression,
+                'stress': agent.mental_health.stress,
+                'wellbeing': agent.mental_health.wellbeing
+            })
             
             # Add to spatial world
             x = random.uniform(100, 1100)
             y = random.uniform(100, 800)
             self.spatial_world.add_agent(i, x, y, speed=random.uniform(1.5, 2.5))
+            
+            # Collect for social network
+            agents_for_network.append({
+                'agent_id': i,
+                'name': agent.name,
+                'role': agent.role,
+                'age': agent.age
+            })
+        
+        # NEW: Generate social network
+        print(f"Generating social network for {len(agents_for_network)} agents...")
+        self.social_network = SocialNetworkGenerator.generate_network(agents_for_network)
+        
+        # Store connections in database
+        for connection in self.social_network.connections.values():
+            self.db.insert_connection({
+                'agent_id_1': connection.agent_id_1,
+                'agent_id_2': connection.agent_id_2,
+                'connection_type': connection.connection_type.value,
+                'strength': connection.strength
+            })
+        
+        print(f"✅ Created {len(agents_for_network)} agents with social network")
     
     def get_state(self):
         """Get current simulation state for frontend"""
@@ -326,9 +417,85 @@ class SimulationRunner:
                 if target_loc:
                     self.movement_system.move_agent_to_location(agent_id, target_loc.location_id)
         
+        # NEW: Generate life events (check every update, but low probability)
+        if random.random() < 0.01:  # 1% chance per update
+            agent_id = random.choice(list(self.agents.keys()))
+            agent = self.agents[agent_id]
+            
+            agent_data = {
+                'agent_id': agent_id,
+                'name': agent.name,
+                'age': agent.age,
+                'role': agent.role,
+                'mental_health': {
+                    'anxiety': agent.mental_health.anxiety,
+                    'depression': agent.mental_health.depression,
+                    'stress': agent.mental_health.stress,
+                    'wellbeing': agent.mental_health.wellbeing
+                }
+            }
+            
+            life_event = self.life_event_generator.generate_event_for_agent(agent_data)
+            
+            if life_event:
+                # Apply event impact
+                impact = life_event.mental_health_impact
+                agent.mental_health.anxiety = max(0.0, min(1.0, 
+                    agent.mental_health.anxiety + impact.get('anxiety', 0)))
+                agent.mental_health.depression = max(0.0, min(1.0,
+                    agent.mental_health.depression + impact.get('depression', 0)))
+                agent.mental_health.stress = max(0.0, min(1.0,
+                    agent.mental_health.stress + impact.get('stress', 0)))
+                agent.mental_health.wellbeing = max(0.0, min(1.0,
+                    agent.mental_health.wellbeing + impact.get('wellbeing', 0)))
+                
+                agent.mental_health.update_category()
+                
+                # Add to memory
+                agent.memory.add_memory(
+                    memory_type='event',
+                    content=life_event.description,
+                    emotional_impact=sum(impact.values()) / len(impact),
+                    importance=life_event.severity
+                )
+                
+                # Store in database
+                self.db.insert_life_event({
+                    'agent_id': agent_id,
+                    'timestamp': datetime.now().isoformat(),
+                    'simulated_time': self.sim_time.strftime('%Y-%m-%d %H:%M'),
+                    'event_type': life_event.event_type.value,
+                    'event_details': json.dumps(life_event.to_dict()),
+                    'mental_health_impact': json.dumps(impact)
+                })
+                
+                print(f"🎲 Life event: {life_event.description}")
+        
         # Trigger conversations (10% chance per update)
         if random.random() < 0.1:
             self.trigger_random_conversation()
+        
+        # NEW: Store mental health states periodically (every 10 updates)
+        if not hasattr(self, 'update_counter'):
+            self.update_counter = 0
+        
+        self.update_counter += 1
+        if self.update_counter % 10 == 0:
+            # Batch insert mental health states
+            states = []
+            for agent_id, agent in self.agents.items():
+                states.append({
+                    'agent_id': agent_id,
+                    'timestamp': datetime.now().isoformat(),
+                    'simulated_time': self.sim_time.strftime('%Y-%m-%d %H:%M'),
+                    'anxiety': agent.mental_health.anxiety,
+                    'depression': agent.mental_health.depression,
+                    'stress': agent.mental_health.stress,
+                    'wellbeing': agent.mental_health.wellbeing
+                })
+            
+            if states:
+                self.db.batch_insert_mental_health_states(states)
         
         # Update time
         self.sim_time += timedelta(seconds=60)  # 1 minute per update
@@ -643,6 +810,209 @@ def get_insights(sim_id):
         return jsonify({
             'success': True,
             'result': result
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+# NEW ENDPOINTS
+
+@app.route('/api/interview/<sim_id>/<int:agent_id>', methods=['POST'])
+def interview_agent(sim_id, agent_id):
+    """Interview an individual agent"""
+    if sim_id not in simulations:
+        return jsonify({'success': False, 'error': 'Simulation not found'}), 404
+    
+    sim = simulations[sim_id]
+    
+    if agent_id not in sim.agents:
+        return jsonify({'success': False, 'error': 'Agent not found'}), 404
+    
+    data = request.json
+    question = data.get('question', '')
+    
+    if not question:
+        return jsonify({'success': False, 'error': 'No question provided'}), 400
+    
+    agent = sim.agents[agent_id]
+    
+    # Build agent data for interview
+    agent_data = {
+        'name': agent.name,
+        'age': agent.age,
+        'role': agent.role,
+        'mental_health': {
+            'anxiety': agent.mental_health.anxiety,
+            'depression': agent.mental_health.depression,
+            'stress': agent.mental_health.stress,
+            'wellbeing': agent.mental_health.wellbeing,
+            'category': agent.mental_health.category.value
+        },
+        'memory_summary': agent.memory.get_context_summary() if hasattr(agent, 'memory') else 'No memories',
+        'recent_actions': []
+    }
+    
+    try:
+        response = sim.interviewer.interview_agent(agent_data, question)
+        
+        # Store interview in database
+        sim.db.insert_interview({
+            'agent_id': agent_id,
+            'timestamp': datetime.now().isoformat(),
+            'simulated_time': sim.sim_time.strftime('%Y-%m-%d %H:%M'),
+            'question': question,
+            'response': response
+        })
+        
+        return jsonify({
+            'success': True,
+            'response': response
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/api/analytics/<sim_id>', methods=['GET'])
+def get_analytics(sim_id):
+    """Get advanced analytics for the simulation"""
+    if sim_id not in simulations:
+        return jsonify({'success': False, 'error': 'Simulation not found'}), 404
+    
+    sim = simulations[sim_id]
+    
+    # Build agents data for analytics
+    agents_data = []
+    for agent_id, agent in sim.agents.items():
+        social_support = sim.social_network.get_social_support_level(agent_id) if sim.social_network else 0.5
+        
+        agents_data.append({
+            'agent_id': agent_id,
+            'name': agent.name,
+            'age': agent.age,
+            'role': agent.role,
+            'mental_health': {
+                'anxiety': agent.mental_health.anxiety,
+                'depression': agent.mental_health.depression,
+                'stress': agent.mental_health.stress,
+                'wellbeing': agent.mental_health.wellbeing,
+                'category': agent.mental_health.category.value
+            },
+            'social_support': social_support,
+            'recent_events': [],
+            'mental_health_history': []
+        })
+    
+    try:
+        # Get at-risk agents
+        at_risk = RiskIdentifier.identify_at_risk_agents(agents_data, risk_threshold=0.6)
+        
+        # Get population stats
+        stats = PopulationAnalytics.calculate_population_stats(agents_data)
+        
+        # Get insights
+        insights = PopulationAnalytics.generate_insights(agents_data, sim.stats_history)
+        
+        # Store current stats in history
+        sim.stats_history.append(stats)
+        if len(sim.stats_history) > 100:  # Keep last 100 snapshots
+            sim.stats_history.pop(0)
+        
+        # Get trends if we have enough history
+        trends = {}
+        if len(sim.stats_history) >= 3:
+            trends = PopulationAnalytics.identify_trends(sim.stats_history)
+        
+        return jsonify({
+            'success': True,
+            'at_risk': at_risk[:10],  # Top 10 at-risk agents
+            'stats': stats,
+            'insights': insights,
+            'trends': trends
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/api/agent/<sim_id>/<int:agent_id>/connections', methods=['GET'])
+def get_agent_connections(sim_id, agent_id):
+    """Get an agent's social network"""
+    if sim_id not in simulations:
+        return jsonify({'success': False, 'error': 'Simulation not found'}), 404
+    
+    sim = simulations[sim_id]
+    
+    if agent_id not in sim.agents:
+        return jsonify({'success': False, 'error': 'Agent not found'}), 404
+    
+    if not sim.social_network:
+        return jsonify({'success': False, 'error': 'Social network not initialized'}), 500
+    
+    try:
+        connections = sim.social_network.get_connections(agent_id)
+        network_stats = sim.social_network.get_network_stats(agent_id)
+        
+        connections_data = []
+        for conn in connections:
+            other_agent_id = conn.get_other_agent(agent_id)
+            other_agent = sim.agents.get(other_agent_id)
+            
+            if other_agent:
+                connections_data.append({
+                    'agent_id': other_agent_id,
+                    'name': other_agent.name,
+                    'role': other_agent.role,
+                    'connection_type': conn.connection_type.value,
+                    'strength': conn.strength,
+                    'interaction_count': conn.interaction_count
+                })
+        
+        return jsonify({
+            'success': True,
+            'connections': connections_data,
+            'stats': network_stats
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/api/agent/<sim_id>/<int:agent_id>/history', methods=['GET'])
+def get_agent_history(sim_id, agent_id):
+    """Get an agent's history (mental health, actions, events)"""
+    if sim_id not in simulations:
+        return jsonify({'success': False, 'error': 'Simulation not found'}), 404
+    
+    sim = simulations[sim_id]
+    
+    if agent_id not in sim.agents:
+        return jsonify({'success': False, 'error': 'Agent not found'}), 404
+    
+    try:
+        # Get mental health history from database
+        mental_health_history = sim.db.get_mental_health_history(agent_id, limit=50)
+        
+        # Get actions from database
+        actions = sim.db.get_agent_actions(agent_id, limit=50)
+        
+        # Get memories if available
+        agent = sim.agents[agent_id]
+        memories = []
+        if hasattr(agent, 'memory'):
+            recent_memories = agent.memory.recall_recent(10)
+            memories = [m.to_dict() for m in recent_memories]
+        
+        return jsonify({
+            'success': True,
+            'mental_health_history': mental_health_history,
+            'actions': actions,
+            'memories': memories
         })
     except Exception as e:
         return jsonify({
