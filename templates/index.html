@@ -4,14 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Synesthesia - Mental Health Population Simulator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/style.css">
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
 </head>
 <body>
+    <!-- Animated Background Elements -->
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+    <div class="bg-shape shape-3"></div>
+
     <!-- Setup Screen -->
     <div id="setup-screen" class="screen active">
-        <div class="container">
-            <h1>SYNESTHESIA</h1>
+        <div class="container glassmorphism">
+            <h1 class="gradient-text">SYNESTHESIA</h1>
             <p class="subtitle">Mental Health Population Simulator</p>
             <p class="tagline">"The Sims meets Black Mirror"</p>
             
