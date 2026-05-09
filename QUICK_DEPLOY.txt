@@ -1,0 +1,127 @@
+╔══════════════════════════════════════════════════════════════╗
+║                                                              ║
+║           🚀 SYNESTHESIA - QUICK DEPLOY GUIDE 🚀            ║
+║                                                              ║
+╚══════════════════════════════════════════════════════════════╝
+
+⏰ TIME: 15 MINUTES
+🎯 GOAL: Deploy to Railway and submit to hackathon
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+STEP 1: CREATE GITHUB REPO (2 MIN)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Go to: https://github.com/new
+2. Name: synesthesia-ai
+3. Visibility: PUBLIC ⚠️
+4. Don't check "Initialize with README"
+5. Click "Create repository"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+STEP 2: PUSH CODE (2 MIN)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+In terminal, run:
+
+git remote add origin https://github.com/YOUR_USERNAME/synesthesia-ai.git
+git push -u origin main
+
+(Replace YOUR_USERNAME with your GitHub username)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+STEP 3: DEPLOY TO RAILWAY (10 MIN)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Go to: https://railway.app
+2. Click "Sign up with GitHub"
+3. Authorize Railway
+4. Click "New Project"
+5. Select "Deploy from GitHub repo"
+6. Choose: synesthesia-ai
+7. Wait for auto-detection
+
+8. Add Environment Variables:
+   - Click "Variables" tab
+   - Add these one by one:
+
+   LLM_API_KEY=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
+   LLM_BASE_URL=https://integrate.api.nvidia.com/v1
+   LLM_MODEL_NAME=qwen/qwen3.5-122b-a10b
+   PORT=5001
+   AMD_API_KEY=your_actual_amd_key
+   AMD_BASE_URL=your_actual_amd_endpoint
+
+9. Wait for deployment (5-10 min)
+
+10. Get your URL:
+    https://synesthesia-production-xxxx.up.railway.app
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+STEP 4: TEST DEPLOYMENT (5 MIN)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Open your Railway URL
+2. Enter: "High school during finals week"
+3. Population: 100
+4. Click "GENERATE & GO"
+5. Wait 30-60 seconds
+6. Watch agents move
+7. Inject event: "Snow day - classes cancelled"
+8. Click "Most at Risk"
+9. Check console for "Powered by AMD"
+
+If everything works → Ready to submit!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+STEP 5: SUBMIT TO HACKATHON (1 MIN)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Field: "Open Source / Technical Walkthrough Link"
+
+Submit:
+https://synesthesia-production-xxxx.up.railway.app
+
+Also mention:
+GitHub: https://github.com/YOUR_USERNAME/synesthesia-ai
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+TROUBLESHOOTING
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Problem: "Application failed to respond"
+Fix: Check Railway logs, verify env variables
+
+Problem: "Society generation timeout"
+Fix: Normal on first load, try again
+
+Problem: "Oracle AI not using AMD"
+Fix: Check AMD_API_KEY and AMD_BASE_URL
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+MORE HELP
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Read: START_HERE.md
+Read: DEPLOYMENT_STEPS.md
+Read: HACKATHON_CHECKLIST.md
+Run: ./deploy.sh
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🚨 DO THIS NOW! 🚨
+
+1. Run: ./deploy.sh
+2. Follow the steps above
+3. Deploy to Railway
+4. Submit to hackathon
+
+YOU GOT THIS! 💪 5 DAYS LEFT! ⏰
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
