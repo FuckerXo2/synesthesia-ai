@@ -21,7 +21,6 @@
         <div class="container glassmorphism">
             <h1 class="gradient-text">SYNESTHESIA</h1>
             <p class="subtitle">Mental Health Population Simulator</p>
-            <p class="tagline">"The Sims meets Black Mirror"</p>
             
             <div class="form-group">
                 <label>What society do you want to simulate?</label>
@@ -67,8 +66,9 @@
         <div class="top-bar">
             <div class="logo">SYNESTHESIA</div>
             <div class="sim-time" id="sim-time">--:--</div>
-            <div class="controls">
+            <div class="header-right">
                 <button id="pause-btn" onclick="togglePause()">⏸️ Pause</button>
+                <button onclick="toggleAnalytics()">📊 Analytics</button>
                 <button onclick="stopSimulation()">⏹️ Stop</button>
             </div>
         </div>
@@ -151,6 +151,34 @@
                 <div id="agent-details" class="agent-details" style="display: none;">
                     <h3>Agent Details</h3>
                     <div id="agent-info"></div>
+                    
+                    <!-- NEW: Agent tabs -->
+                    <div class="agent-tabs">
+                        <button class="tab-btn active" onclick="showAgentTab('details')">Details</button>
+                        <button class="tab-btn" onclick="showAgentTab('network')">Network</button>
+                        <button class="tab-btn" onclick="showAgentTab('history')">History</button>
+                        <button class="tab-btn" onclick="showAgentTab('interview')">Interview</button>
+                    </div>
+                    
+                    <div id="agent-tab-details" class="agent-tab-content active">
+                        <!-- Details shown here -->
+                    </div>
+                    
+                    <div id="agent-tab-network" class="agent-tab-content" style="display: none;">
+                        <div id="agent-network-content">Loading...</div>
+                    </div>
+                    
+                    <div id="agent-tab-history" class="agent-tab-content" style="display: none;">
+                        <div id="agent-history-content">Loading...</div>
+                    </div>
+                    
+                    <div id="agent-tab-interview" class="agent-tab-content" style="display: none;">
+                        <div class="interview-section">
+                            <input type="text" id="interview-question" placeholder="Ask the agent a question..." />
+                            <button onclick="askAgentQuestion()">Ask</button>
+                            <div id="interview-response"></div>
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="controls-help">
@@ -158,6 +186,43 @@
                     <p>🖱️ Click agent to see details</p>
                     <p>🔍 Scroll to zoom</p>
                     <p>🖐️ Drag to pan</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- NEW: Analytics Sidebar -->
+        <div id="analytics-sidebar" class="oracle-sidebar">
+            <div class="oracle-header">
+                <h3>📊 Analytics</h3>
+                <span class="amd-badge">Powered by AMD</span>
+            </div>
+            <p class="oracle-subtitle">Population insights and risk analysis</p>
+            
+            <div class="oracle-content">
+                <button class="query-btn" onclick="refreshAnalytics()" style="width: 100%; margin-bottom: 20px;">
+                    🔄 Refresh Analytics
+                </button>
+                
+                <div id="analytics-content">
+                    <div class="analytics-section">
+                        <h4>⚠️ At-Risk Agents</h4>
+                        <div id="at-risk-list">Loading...</div>
+                    </div>
+                    
+                    <div class="analytics-section">
+                        <h4>📈 Trends</h4>
+                        <div id="trends-list">Loading...</div>
+                    </div>
+                    
+                    <div class="analytics-section">
+                        <h4>💡 Insights</h4>
+                        <div id="insights-list">Loading...</div>
+                    </div>
+                    
+                    <div class="analytics-section">
+                        <h4>📊 Population Stats</h4>
+                        <div id="population-stats">Loading...</div>
+                    </div>
                 </div>
             </div>
         </div>

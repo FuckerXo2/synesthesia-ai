@@ -760,3 +760,272 @@ function displayOracleResponse(result) {
     
     answerDiv.innerHTML = html;
 }
+
+// NEW FEATURES
+
+let currentAgentId = null;
+
+function showAgentTab(tabName) {
+    // Hide all tabs
+    document.querySelectorAll('.agent-tab-content').forEach(tab => {
+        tab.style.display = 'none';
+    });
+    
+    // Remove active class from all buttons
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // Show selected tab
+    document.getElementById(`agent-tab-${tabName}`).style.display = 'block';
+    
+    // Add active class to clicked button
+    event.target.classList.add('active');
+    
+    // Load data for the tab
+    if (tabName === 'network' && currentAgentId !== null) {
+        loadAgentNetwork(currentAgentId);
+    } else if (tabName === 'history' && currentAgentId !== null) {
+        loadAgentHistory(currentAgentId);
+    }
+}
+
+async function loadAgentNetwork(agentId) {
+    const content = document.getElementById('agent-network-content');
+    content.innerHTML = '<p>Loading social network...</p>';
+    
+    try {
+        const response = await fetch(`/api/agent/${currentSimId}/${agentId}/connections`);
+        const data = await response.json();
+        
+        if (data.success) {
+            let html = `<p><strong>Social Support:</strong> ${(data.stats.social_support * 100).toFixed(0)}%</p>`;
+            html += `<p><strong>Total Connections:</strong> ${data.stats.total_connections}</p>`;
+            html += '<div style="margin-top: 15px;">';
+            
+            if (data.connections.length === 0) {
+                html += '<p>No connections found.</p>';
+            } else {
+                data.connections.forEach(conn => {
+                    html += `
+                        <div class="connection-item">
+                            <span class="connection-type">${conn.connection_type}</span>
+                            <strong>${conn.name}</strong> (${conn.role})<br>
+                            Strength: ${(conn.strength * 100).toFixed(0)}% | 
+                            Interactions: ${conn.interaction_count}
+                        </div>
+                    `;
+                });
+            }
+            
+            html += '</div>';
+            content.innerHTML = html;
+        } else {
+            content.innerHTML = `<p class="error">Error: ${data.error}</p>`;
+        }
+    } catch (error) {
+        content.innerHTML = `<p class="error">Failed to load network</p>`;
+        console.error('Network error:', error);
+    }
+}
+
+async function loadAgentHistory(agentId) {
+    const content = document.getElementById('agent-history-content');
+    content.innerHTML = '<p>Loading history...</p>';
+    
+    try {
+        const response = await fetch(`/api/agent/${currentSimId}/${agentId}/history`);
+        const data = await response.json();
+        
+        if (data.success) {
+            let html = '<h4>Recent Mental Health</h4>';
+            
+            if (data.mental_health_history.length > 0) {
+                data.mental_health_history.slice(0, 5).forEach(state => {
+                    html += `
+                        <div class="history-item">
+                            <div class="history-timestamp">${state.simulated_time}</div>
+                            Anxiety: ${state.anxiety.toFixed(2)} | 
+                            Depression: ${state.depression.toFixed(2)} | 
+                            Stress: ${state.stress.toFixed(2)} | 
+                            Wellbeing: ${state.wellbeing.toFixed(2)}
+                        </div>
+                    `;
+                });
+            } else {
+                html += '<p>No history available yet.</p>';
+            }
+            
+            html += '<h4 style="margin-top: 20px;">Recent Memories</h4>';
+            if (data.memories && data.memories.length > 0) {
+                data.memories.forEach(memory => {
+                    html += `
+                        <div class="history-item">
+                            <div class="history-timestamp">${memory.timestamp}</div>
+                            ${memory.content}
+                        </div>
+                    `;
+                });
+            } else {
+                html += '<p>No memories recorded.</p>';
+            }
+            
+            content.innerHTML = html;
+        } else {
+            content.innerHTML = `<p class="error">Error: ${data.error}</p>`;
+        }
+    } catch (error) {
+        content.innerHTML = `<p class="error">Failed to load history</p>`;
+        console.error('History error:', error);
+    }
+}
+
+async function askAgentQuestion() {
+    const input = document.getElementById('interview-question');
+    const question = input.value.trim();
+    
+    if (!question) {
+        alert('Please enter a question');
+        return;
+    }
+    
+    if (currentAgentId === null) {
+        alert('No agent selected');
+        return;
+    }
+    
+    const responseDiv = document.getElementById('interview-response');
+    responseDiv.innerHTML = '<p>Agent is thinking...</p>';
+    
+    try {
+        const response = await fetch(`/api/interview/${currentSimId}/${currentAgentId}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ question })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            responseDiv.innerHTML = `
+                <p><strong>You:</strong> ${question}</p>
+                <p style="margin-top: 10px;"><strong>Agent:</strong> ${data.response}</p>
+            `;
+            input.value = '';
+        } else {
+            responseDiv.innerHTML = `<p class="error">Error: ${data.error}</p>`;
+        }
+    } catch (error) {
+        responseDiv.innerHTML = `<p class="error">Failed to interview agent</p>`;
+        console.error('Interview error:', error);
+    }
+}
+
+function toggleAnalytics() {
+    const sidebar = document.getElementById('analytics-sidebar');
+    sidebar.classList.toggle('active');
+    
+    if (sidebar.classList.contains('active')) {
+        refreshAnalytics();
+    }
+}
+
+async function refreshAnalytics() {
+    if (!currentSimId) {
+        alert('No simulation running');
+        return;
+    }
+    
+    // Show loading
+    document.getElementById('at-risk-list').innerHTML = '<p>Loading...</p>';
+    document.getElementById('trends-list').innerHTML = '<p>Loading...</p>';
+    document.getElementById('insights-list').innerHTML = '<p>Loading...</p>';
+    document.getElementById('population-stats').innerHTML = '<p>Loading...</p>';
+    
+    try {
+        const response = await fetch(`/api/analytics/${currentSimId}`);
+        const data = await response.json();
+        
+        if (data.success) {
+            // At-risk agents
+            let atRiskHtml = '';
+            if (data.at_risk.length === 0) {
+                atRiskHtml = '<p>No agents at high risk.</p>';
+            } else {
+                data.at_risk.forEach(agent => {
+                    atRiskHtml += `
+                        <div class="at-risk-item">
+                            <strong>${agent.name}</strong> (${agent.role})<br>
+                            Risk Score: ${(agent.risk_score * 100).toFixed(0)}%<br>
+                            Reason: ${agent.reason}
+                        </div>
+                    `;
+                });
+            }
+            document.getElementById('at-risk-list').innerHTML = atRiskHtml;
+            
+            // Trends
+            let trendsHtml = '';
+            if (Object.keys(data.trends).length === 0) {
+                trendsHtml = '<p>Not enough data for trends yet.</p>';
+            } else {
+                for (const [metric, trend] of Object.entries(data.trends)) {
+                    const trendClass = trend === 'increasing' ? 'trend-increasing' : 
+                                      trend === 'decreasing' ? 'trend-decreasing' : 'trend-stable';
+                    const arrow = trend === 'increasing' ? '📈' : 
+                                 trend === 'decreasing' ? '📉' : '➡️';
+                    trendsHtml += `
+                        <div class="trend-item ${trendClass}">
+                            ${arrow} ${metric}: ${trend}
+                        </div>
+                    `;
+                }
+            }
+            document.getElementById('trends-list').innerHTML = trendsHtml;
+            
+            // Insights
+            let insightsHtml = '';
+            if (data.insights.length === 0) {
+                insightsHtml = '<p>No significant insights yet.</p>';
+            } else {
+                data.insights.forEach(insight => {
+                    insightsHtml += `<div class="insight-item">${insight}</div>`;
+                });
+            }
+            document.getElementById('insights-list').innerHTML = insightsHtml;
+            
+            // Population stats
+            const stats = data.stats;
+            let statsHtml = `
+                <p><strong>Total Population:</strong> ${stats.total_population}</p>
+                <p><strong>Avg Anxiety:</strong> ${stats.avg_anxiety.toFixed(2)}</p>
+                <p><strong>Avg Depression:</strong> ${stats.avg_depression.toFixed(2)}</p>
+                <p><strong>Avg Stress:</strong> ${stats.avg_stress.toFixed(2)}</p>
+                <p><strong>Avg Wellbeing:</strong> ${stats.avg_wellbeing.toFixed(2)}</p>
+            `;
+            document.getElementById('population-stats').innerHTML = statsHtml;
+        } else {
+            document.getElementById('at-risk-list').innerHTML = `<p class="error">Error: ${data.error}</p>`;
+        }
+    } catch (error) {
+        document.getElementById('at-risk-list').innerHTML = '<p class="error">Failed to load analytics</p>';
+        console.error('Analytics error:', error);
+    }
+}
+
+// Update selectAgent to store current agent ID
+const originalSelectAgent = selectAgent;
+selectAgent = function(agent) {
+    currentAgentId = agent.id;
+    originalSelectAgent(agent);
+    
+    // Reset to details tab
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.tab-btn')[0].classList.add('active');
+    document.querySelectorAll('.agent-tab-content').forEach(tab => tab.style.display = 'none');
+    document.getElementById('agent-tab-details').style.display = 'block';
+    
+    // Move agent info into details tab
+    const agentInfo = document.getElementById('agent-info').innerHTML;
+    document.getElementById('agent-tab-details').innerHTML = agentInfo;
+};
