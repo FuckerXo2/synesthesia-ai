@@ -135,7 +135,7 @@ async function togglePause() {
     const data = await response.json();
     if (data.success) {
         const btn = document.getElementById('pause-btn');
-        btn.textContent = data.paused ? 'RESUME' : 'PAUSE';
+        btn.textContent = data.paused ? '▶️ Resume' : '⏸️ Pause';
     }
 }
 
@@ -180,9 +180,12 @@ async function injectEvent() {
             const result = data.result;
             
             feedback.innerHTML = `
-                INJECTED | ${result.affected_count} AGENTS | 
-                STRESS ${result.stress_change > 0 ? '+' : ''}${(result.stress_change * 100).toFixed(0)}% | 
-                ANXIETY ${result.anxiety_change > 0 ? '+' : ''}${(result.anxiety_change * 100).toFixed(0)}%
+                <span class="event-success">✅ Event injected!</span>
+                <span class="event-stats">
+                    ${result.affected_count} agents affected | 
+                    Stress ${result.stress_change > 0 ? '+' : ''}${(result.stress_change * 100).toFixed(0)}% | 
+                    Anxiety ${result.anxiety_change > 0 ? '+' : ''}${(result.anxiety_change * 100).toFixed(0)}%
+                </span>
             `;
             
             // Clear input
@@ -620,36 +623,25 @@ function handleWheel(e) {
 function selectAgent(agent) {
     selectedAgent = agent;
     
-    // Show agent panel
-    const panel = document.getElementById('agent-panel');
+    // Show agent details
+    const detailsDiv = document.getElementById('agent-details');
     const infoDiv = document.getElementById('agent-info');
     
-    panel.style.display = 'block';
+    detailsDiv.style.display = 'block';
     
     const mh = agent.mental_health;
     infoDiv.innerHTML = `
         <p><strong>${agent.name}</strong>, ${agent.age}</p>
-        <p>ROLE: ${agent.role}</p>
-        <p style="margin-top: 15px;"><strong>MENTAL HEALTH</strong></p>
-        <p>STATE: ${mh.category.toUpperCase()}</p>
-        <p>ANXIETY: ${mh.anxiety.toFixed(2)}</p>
-        <p>DEPRESSION: ${mh.depression.toFixed(2)}</p>
-        <p>STRESS: ${mh.stress.toFixed(2)}</p>
-        <p>WELLBEING: ${mh.wellbeing.toFixed(2)}</p>
+        <p>Role: ${agent.role}</p>
+        <p style="margin-top: 10px;"><strong>Mental Health:</strong></p>
+        <p>State: ${mh.category}</p>
+        <p>Anxiety: ${mh.anxiety.toFixed(2)}</p>
+        <p>Depression: ${mh.depression.toFixed(2)}</p>
+        <p>Stress: ${mh.stress.toFixed(2)}</p>
+        <p>Wellbeing: ${mh.wellbeing.toFixed(2)}</p>
     `;
     
     render();
-}
-
-function closeAgentPanel() {
-    document.getElementById('agent-panel').style.display = 'none';
-    selectedAgent = null;
-    render();
-}
-
-function toggleOracle() {
-    const sidebar = document.getElementById('oracle-sidebar');
-    sidebar.classList.toggle('active');
 }
 
 // Oracle AI Functions
